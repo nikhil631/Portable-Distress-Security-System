@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Root</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'security/bootstrap.min.css' %}">
+</head>
+<style>
+    body {
+      background-color: #212529;
+    }
+    .vertical-center {
+      margin:auto;
+      transform: translateY(80%);
+    }
+</style>
+  
+<body>
+    
+    {% if user.is_authenticated %}
+    <div ALIGN="right">
+    <a href="/logout/"><button class="btn btn-primary mb-3">Logout</button></a>
+    </div>
+    <br>
+    {% else %}
+    <h7 style="color: white;">Your are not logged in to view this page, Please log in</h7> <br>
+    <div ALIGN='center' class="vertical-center">
+    <a href="/login/"><button class="btn btn-primary mb-3">Login</button></a>
+     <br>
+    <a href="/registration/"><button class="btn btn-primary mb-3">Registration</button></a> 
+    <br>
+    </div>
+    {% endif %}
+</body>
+</html>
