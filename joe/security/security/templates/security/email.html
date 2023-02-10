@@ -1,0 +1,37 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h3>Accident has occured, Details are available below:- </h3>
+        <table style="width: 100%;" >
+            <tr>
+                <td style="border: 1px solid black;">Name</td>
+                <td style="border: 1px solid black; text-align: center;">{{first_name}} {{last_name}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;">Latitude</td>
+                <td style="border: 1px solid black; text-align: center;">{{coordinate_x}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;">Longitude</td>
+                <td style="border: 1px solid black; text-align: center;">{{coordinate_y}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;">emergency</td>
+                {% if emergency %}
+                <td style="border: 1px solid black;text-align: center;">Yes</td>
+                {% else %}
+                <td style="border: 1px solid black;text-align: center;">No</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;">Date</td>
+                <td style="border: 1px solid black;text-align: center;">{{date}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid black;">Time</td>
+                <td style="border: 1px solid black;text-align: center;">{{time}}</td>
+            </tr>
+        </table>
+    </body>
+    </html>

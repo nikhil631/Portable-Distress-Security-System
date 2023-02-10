@@ -1,10 +1,9 @@
 from django.shortcuts import render,HttpResponseRedirect
-from .models import *
 from .forms import *
 from .miscellaneous import *
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-
+import datetime
 def registration(request):
     form=user_create()
     if request.method=="POST":
@@ -24,7 +23,11 @@ def registration(request):
 
 def home(request):
     context={}
+    if request.user.is_authenticated:
+        context={"data":object_filter(factor={"roll_id":request.user.id},model="incoming_info")}
+
     return render(request,"security/home.html",context)
+    
 def root(request):
     return HttpResponseRedirect("/home")
 
@@ -54,3 +57,16 @@ def logouts(request):
         messages.error(request,"Logout failed, Not Logged in currently")
         return HttpResponseRedirect("/login/")
 
+def add_data(request,coor_x,coor_y,emerg,ids):
+    context={
+        'x':coor_x,
+        'y':coor_y,
+        "emerg":emerg,
+        "id":ids,
+        "datetime":datetime.datetime.now(),
+        }
+    
+    object_creator(factor={"roll_id":ids,"coordinate_x":coor_x,"coordinate_y":coor_y,"emergency":emerg,"date_time":context["datetime"]},model="incoming_info")
+    send_mail_to_relatives(users=object_get(factor={'id':ids},model="User"),cont=context)
+
+    return render(request,"security/data_add.html",context)

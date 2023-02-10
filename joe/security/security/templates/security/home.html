@@ -21,10 +21,26 @@
 <body>
     
     {% if user.is_authenticated %}
-    <div ALIGN="right">
-    <a href="/logout/"><button class="btn btn-primary mb-3">Logout</button></a>
-    </div>
-    <br>
+      <div ALIGN="right">
+      <a href="/logout/"><button class="btn btn-primary mb-3">Logout</button></a>
+      </div>
+      <br>
+      <h3 style="color:white;">Your Past Records with us</h3> <br>
+      <table class="table table-dark table-hover table-bordered">
+        <tr>
+            <th>Coordinate_x</th>
+            <th>Coordinate_y</th>
+            <th>Emergency</th>
+        </tr>
+      {% for dat in data %}
+        <tr>
+          <td>{{dat.coordinate_x}}</td>
+          <td>{{dat.coordinate_y}}</td>
+          {% if dat.emergency %}<td>Yes</td>{% else %}<td>No</td>{% endif %}
+          
+        </tr>
+      {% endfor %}
+      </table>
     {% else %}
     <h7 style="color: white;">Your are not logged in to view this page, Please log in</h7> <br>
     <div ALIGN='center' class="vertical-center">

@@ -3,5 +3,15 @@ from django.contrib.auth.models import User
 
 class contact_info(models.Model):
     roll=models.OneToOneField(User,to_field='id',on_delete=models.CASCADE)
-    phone=models.CharField(max_length=10)
-    email=models.EmailField()
+    phone=models.CharField(max_length=10,unique=True)
+    email=models.EmailField(unique=True)
+class incoming_info(models.Model):
+    roll=models.ForeignKey(contact_info,to_field='roll',on_delete=models.CASCADE)
+    coordinate_x=models.CharField(max_length=354)
+    coordinate_y=models.CharField(max_length=354)
+    emergency=models.BooleanField()
+    date_time=models.DateTimeField(default="1111-11-11")
+
+class relation_users(models.Model):
+    roll=models.ForeignKey(contact_info,to_field='roll',on_delete=models.CASCADE,related_name="rolls")
+    relation=models.OneToOneField(contact_info,to_field='roll',on_delete=models.CASCADE,related_name="relation")

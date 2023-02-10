@@ -4,26 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Info</title>
+    <title>Add Data to Database</title>
 </head>
 {% load static %}
 <link rel="stylesheet" href="{% static 'security/bootstrap.min.css' %}">
 <style>
-    body {background-color:#212529;
+    body {
+        background-color:#212529;
     }
 </style>
 <body>
+    <p>Following Data added to the Database</p>
     <div>
         <table class="table table-dark table-hover table-bordered">
             <tr>
-                <th>Roll</th>
-                <th>Name</th>
-                <th>Email</th>
+                <th>Coordinate_x</th>
+                <th>Coordinate_y</th>
+                <th>Emergency</th>
+                <th>Id</th>
             </tr>
             <tr>
-                <td>{{student.roll}}</td>
-                <td>{{student.name}}</td>
-                <td>{{student.email}}</td>
+                <td>{{x}}</td>
+                <td>{{y}}</td>
+                {% if emerg %}<td>Yes</td> {% else %}<td>No</td>{% endif %}
+                <td>{{id}}</td>
             </tr>
         </table>
     </div>
