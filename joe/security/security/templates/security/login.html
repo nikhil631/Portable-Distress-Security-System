@@ -22,8 +22,8 @@ body {
 <body>
 
   {% for messg in messages %}
-  {% if messg.success %}
-    <p style="color:green;">{{messg}}</p>
+  {% if "success" in messg.tags %}
+    <p style="color:lightgreen;">{{messg}}</p>
   {% else %}
     <p style="color:red;">{{messg}}</p>
   {% endif %}

@@ -19,6 +19,13 @@
 </style>
   
 <body>
+  {% for messg in messages %}
+  {% if "success" in messg.tags %}
+    <p style="color:lightgreen;">{{messg}}</p>
+  {% else %}
+    <p style="color:red;">{{messg}}</p>
+  {% endif %}
+  {% endfor %}
     
     {% if user.is_authenticated %}
       <div ALIGN="right">
