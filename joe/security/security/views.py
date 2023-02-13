@@ -4,6 +4,7 @@ from .miscellaneous import *
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 import datetime
+from django.db.utils import IntegrityError
 def registration(request):
     form=user_create()
     if request.method=="POST":
@@ -67,6 +68,19 @@ def add_data(request,coor_x,coor_y,emerg,ids):
         }
     
     object_creator(factor={"roll_id":ids,"coordinate_x":coor_x,"coordinate_y":coor_y,"emergency":emerg,"date_time":context["datetime"]},model="incoming_info")
-    send_mail_to_relatives(users=object_get(factor={'id':ids},model="User"),cont=context)
-
+    # send_mail_to_relatives(users=object_get(factor={'id':ids},model="User"),cont=context)
+    send_mail_to_relatives(user=object_filter_orderby(factor={"roll":ids},model="incoming_info",orderby="-id")[0])
     return render(request,"security/data_add.html",context)
+def add_relatives(request):
+    context={"form":add_rel()}
+    if request.method=="POST":
+        print(request.POST["relatives"],request.user.id)
+        try:
+            object_creator(factor={"roll_id":request.user.id,"relation_id":request.POST["relatives"]},model="relation_users")
+            messages.success(request,"Relations added Successfully")
+            return HttpResponseRedirect("/add_relatives/")
+        except Exception as e:
+            if e.args[0]==1062:
+                messages.error(request,"This relation already exists, Please try someone else")
+                return HttpResponseRedirect("/add_relatives/")                
+    return render(request,"security/relatives_add.html",context)

@@ -23,23 +23,35 @@ def object_filter(factor,model):
     # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
     return eval(model).objects.filter(**factor)
 
-def send_mail_to_relatives(users,cont):
+def object_filter_orderby(factor,model,orderby):
+    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    return eval(model).objects.filter(**factor).order_by(orderby)
 
+def object_all(model):
+    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    return eval(model).objects.all()
+
+def send_mail_to_relatives(user):
+    
+    # roll.roll.id means going from table this table incoming_info(roll)->contact_info(roll)->auth_user(id)
+    
     context={
-        "first_name":users.first_name,
-        "last_name":users.last_name,
-        "coordinate_x":cont['x'],
-        "coordinate_y":cont['y'],
-        "emergency":cont['emerg'],
-        "date":format(cont["datetime"],"%d-%m-%Y"),
-        "time":format(cont["datetime"],'%I:%M %p')
+        "first_name":user.roll.roll.first_name,
+        "last_name":user.roll.roll.last_name,
+        "email":user.roll.roll.email,
+        "coordinate_x":user.coordinate_x,
+        "coordinate_y":user.coordinate_y,
+        "emergency":user.emergency,
+        "date":format(user.date_time,"%d-%m-%Y"),
+        "time":format(user.date_time,'%I:%M %p')
     }
     
     mail.send_mail(
-    subject=f"{users.first_name} {users.last_name} might be in danger",
-    from_email=users.email,
-    recipient_list=[object_get(factor={"roll_id":l},model="contact_info").email for l in [x.relation_id for x in object_filter(factor={"roll_id":cont["id"]},model="relation_users")]],
+    subject=f"{context['first_name']} {context['last_name']} might be in danger",
+    from_email=context["email"],
+    recipient_list=[x.relation.email for x in object_filter(factor={"roll_id":user.roll},model="relation_users")],
     html_message=render_to_string("security/email.html",context),
     message=strip_tags("security/emails.html")
     )
-    print(render_to_string("security/email.html",context))
