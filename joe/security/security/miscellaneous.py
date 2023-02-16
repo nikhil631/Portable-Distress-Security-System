@@ -70,4 +70,4 @@ def send_mobile_messages(user):
     phone_relations=[x.relation.phone for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]
     if len(phone_relations)!=0:
         for x in phone_relations:
-            pywhatkit.sendwhatmsg_instantly(f"+91{x}",message=f"{context['first_name']} {context['last_name']} is in distress, X coordinate is {context['coordinate_x']}, Y coordinate is {context['coordinate_y']}, Date for this action is {context['date']} and time is {context['time']}, Go to this https://www.google.com/maps/search/?api=1&query={context['coordinate_x']},{context['coordinate_y']}",tab_close=True)
+            pywhatkit.sendwhatmsg_instantly(f"+91{x}",message=f"{context['first_name']} {context['last_name']} is in distress, X coordinate is {context['coordinate_x']}, Y coordinate is {context['coordinate_y']}, Date for this action is {context['date']} and time is {context['time']}, Click this link for Location https://www.google.com/maps/search/?api=1&query={context['coordinate_x']},{context['coordinate_y']}",tab_close=True)
