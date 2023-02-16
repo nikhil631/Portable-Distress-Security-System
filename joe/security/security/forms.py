@@ -13,4 +13,5 @@ class user_sign(forms.Form):
     username=forms.CharField(widget=forms.TextInput(attrs={'style':'width:10%'}),max_length=400)
     password=forms.CharField(widget=forms.PasswordInput(attrs={'style':'width:10%'}),max_length=400)
 class add_rel(forms.Form):
-    relatives=forms.ChoiceField(choices=((f"{x.id}",f"{x.username}") for x in User.objects.all()))
+    choices=[(f"{x.id}",f"{x.username}") for x in User.objects.all()]
+    relatives=forms.ChoiceField(choices=choices)
