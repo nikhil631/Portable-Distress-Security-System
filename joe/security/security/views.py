@@ -85,3 +85,13 @@ def add_relatives(request):
                 messages.error(request,"This relation already exists, Please try someone else")
                 return HttpResponseRedirect("/add_relatives/")                
     return render(request,"security/relatives_add.html",context)
+
+def rem_relatives(request):
+    relatives=[x for x in object_filter(factor={"roll_id":request.user.id},model="relation_users")]
+    if request.method=="POST":
+        relatives=[object_get(factor={"roll_id":request.user.id,"relation_id":x},model="relation_users").delete() for x in request.POST if request.POST[x]=="on"]
+        return HttpResponseRedirect("/rem_relatives/")  
+    context={
+        "relatives":relatives,
+        }
+    return render(request,"security/rem_relatives.html",context)

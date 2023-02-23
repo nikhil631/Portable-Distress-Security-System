@@ -34,6 +34,11 @@ def object_all(model):
     # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
     return eval(model).objects.all()
 
+def object_remove(factor,model):
+    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    return eval(model).objects.filter(**factor)
+
 def send_mail_to_relatives(user):
     emails_relations=[x.relation.email for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]
     # roll.roll.id means going from table this table incoming_info(roll)->contact_info(roll)->auth_user(id)

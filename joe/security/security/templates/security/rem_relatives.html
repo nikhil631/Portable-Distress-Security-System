@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Attendance</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'security/bootstrap.min.css' %}">
+</head>
+<style>
+    td {
+        text-align: center;
+    }
+</style>
+<body style="background-color:#212529;">
+
+    {% if user.is_authenticated %}
+        <form action="" method="POST">
+            <table class="table table-dark table-hover">
+            <tr>
+                <th>Name</th>
+                <th style="text-align: center;">Remove Relatives</th>
+            </tr>
+            {% csrf_token %}
+            {% for x in relatives %}
+            <tr>
+                <td style="text-align: left;">{{x.relation.roll.first_name}} {{x.relation.roll.last_name}}</td>
+                <td>
+                    <label for="attend"></label>
+                    <input type="checkbox" name="{{x.relation_id}}">
+                </td>
+            </tr>
+            {% endfor %}
+            </table>
+            <br>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+            {% else %}
+            <p style="color: white;">You are not authorized to view this Page</p>
+            {% endif %}
+</body>
+</html>
