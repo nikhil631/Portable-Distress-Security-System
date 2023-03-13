@@ -72,7 +72,7 @@ def add_data(request,coor_x,coor_y,emerg,ids):
     send_mobile_messages(user=object_filter_orderby(factor={"roll":ids},model="incoming_info",orderby="-id")[0])
     return render(request,"security/data_add.html",context)
 def add_relatives(request):
-    context={"form":add_rel()}
+    context={"people":object_all("User")}
     if request.method=="POST":
         try:
             if str(request.POST["relatives"]) in [str(x.relation_id) for x in object_filter(factor={"roll_id":request.user.id},model="relation_users")]:

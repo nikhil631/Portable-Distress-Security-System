@@ -34,7 +34,12 @@ body {
         {% csrf_token %}
         <div class="mb-2">
         <label for="Add Relatives" style="color: white;"><b>Add Relatives</b></label>
-        {% render_field form.relatives class="form-select" style="width:300px;" %}
+        
+        <select name="relatives" id="id_relatives" class="form-select">
+        {% for x in people %}
+        <option value="{{x.id}}">{{x.username}}</option>
+        {% endfor %}
+      </select>
         </div>
         <div class="vertical-center"> 
         <input type="submit" class="btn btn-primary" style="width:300px" value="Create Relation">

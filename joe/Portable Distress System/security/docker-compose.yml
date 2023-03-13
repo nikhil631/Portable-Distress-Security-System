@@ -1,0 +1,13 @@
+version: '3'
+services:
+  web:
+    build: .
+    environment:
+      - MYSQL_DATABASE='security'
+      - MYSQL_ROOT_PASSWORD='123456789'
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+      - /tmp/app/mysqld:/run/mysqld
+    command: python manage.py runserver 0.0.0.0:8000
