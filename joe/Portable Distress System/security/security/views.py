@@ -9,8 +9,8 @@ def registration(request):
     form=user_create()
     if request.method=="POST":
         form=user_create(request.POST)
-        if duplicate_entries_preventer(factor={'email':request.POST["email"]},model="User"):
-            messages.error(request,"Email Already Exists, Please use a different email")
+        if object_exists(factor={'email':request.POST["email"]},model="User") or object_exists(factor={'username':request.POST["username"]},model="User"):
+            messages.error(request,"Email or Username Already Exists, Please use a different email")
             return HttpResponseRedirect("/registration/")
         if form.is_valid():
             form.save()
@@ -28,10 +28,9 @@ def home(request):
         context={"data":object_filter_orderby(factor={"roll_id":request.user.id},model="incoming_info",orderby="-id")}
 
     return render(request,"security/home.html",context)
-    
+
 def root(request):
     return HttpResponseRedirect("/home")
-
 
 def logins(request):
     form=user_sign()

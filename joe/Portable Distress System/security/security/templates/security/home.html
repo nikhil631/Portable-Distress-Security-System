@@ -50,6 +50,8 @@
         <tr>
             <th>Coordinate_x</th>
             <th>Coordinate_y</th>
+            <th>Date</th>
+            <th>Time</th>
             <th>Emergency</th>
             <th>Location</th>
         </tr>
@@ -57,6 +59,8 @@
         <tr>
           <td>{{dat.coordinate_x}}</td>
           <td>{{dat.coordinate_y}}</td>
+          <td>{{dat.date_time|date:'l, F jS, Y'}}</td>
+          <td>{{dat.date_time|date:'h:i A'}}</td>
           {% if dat.emergency %}<td>Yes</td>{% else %}<td>No</td>{% endif %}
           <td><a href="https://www.google.com/maps/search/?api=1&query={{dat.coordinate_x}},{{dat.coordinate_y}}"><button type="button" class="btn btn-outline-info btn-sm">See Location</button></a></td>
         </tr>

@@ -1,16 +1,51 @@
 from django.contrib.auth.models import User
 from .models import *
 from django.core import mail
+from django.core.cache import cache
+from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 import pywhatkit
-def duplicate_entries_preventer(factor,model):
+
+def custom_commands(command:str):
+    """
+    This function taked command as string input,
+    It just executes all your written commands from this file,
+    The reason for this is to make your views.py cleaner,
+    By importing most functions in another file and use when needed
+    """
+    exec(command)
+
+def cache_object_set(key:str,value:any,Default_Timeout:int=None,NX:bool=False):
+    """
+    Function to set object in cache,
+    both NX and EX methods are supported,
+    """
+    if NX:
+        cache.add(key,value,Default_Timeout)
+    else:
+        cache.set(key,value,Default_Timeout)
+
+def cache_object_get(key:str):
+    """
+    Function to set object in cache,
+    both NX and EX methods are supported,
+    """
+    return cache.get(key)
+
+
+def cache_object_get_or_set(key:str,value:any,Default_Timeout:int=None):
+    """
+    Get or Set, If value doesn't exist in cache it creates the value,
+    If value already exists in cache it just retrieves it
+    """
+    return cache.get_or_set(key,value,Default_Timeout)
+
+
+def object_exists(factor,model):
     # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
     # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
-    if eval(model).objects.filter(**factor).exists():
-        return True
-    else:
-        return False
+    return eval(model).objects.filter(**factor).exists()
 def object_get(factor,model):
     # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
     # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to

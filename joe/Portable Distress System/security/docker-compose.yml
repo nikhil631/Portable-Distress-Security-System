@@ -1,13 +1,35 @@
 version: '3'
 services:
-  web:
-    build: .
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
     environment:
-      - MYSQL_DATABASE='security'
-      - MYSQL_ROOT_PASSWORD='123456789'
+      - MYSQL_DATABASE=security
+      - MYSQL_ROOT_PASSWORD=123456789
+    volumes:
+      - /tmp/app/mysqld:/var/run/mysqld
+      - ./mysql_dump:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  
+  web:
+    depends_on:
+      db:
+        condition: "service_healthy"
+    environment:
+    - MYSQL_USER=root
+    - MYSQL_DATABASE=security
+    - MYSQL_ROOT_PASSWORD=123456789
+    - EMAIL_HOST_USER=nikhil.tomar.22cse@bmu.edu.in
+    - EMAIL_HOST_PASSWORD=Nikhil@931
+    - MYSQL_PORT=3306
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
       - .:/app
       - /tmp/app/mysqld:/run/mysqld
-    command: python manage.py runserver 0.0.0.0:8000
