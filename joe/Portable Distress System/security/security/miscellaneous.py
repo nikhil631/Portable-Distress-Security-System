@@ -5,7 +5,8 @@ from django.core.cache import cache
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-import pywhatkit
+from twilio.rest import Client
+from django.conf import settings
 
 def custom_commands(command:str):
     """
@@ -97,7 +98,9 @@ def send_mail_to_relatives(user):
         message=strip_tags("security/emails.html")
         )
 
+
 def send_mobile_messages(user):
+    # Twillio Implementation below
     context={
     "first_name":user.roll.roll.first_name,
     "last_name":user.roll.roll.last_name,
@@ -109,5 +112,6 @@ def send_mobile_messages(user):
     }
     phone_relations=[x.relation.phone for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]
     if len(phone_relations)!=0:
+        client=Client(settings.WHATSAPP_API_SID,settings.WHATSAPP_API_AUTH_TOKEN)
         for x in phone_relations:
-            pywhatkit.sendwhatmsg_instantly(f"+91{x}",message=f"{context['first_name']} {context['last_name']} is in distress, X coordinate is {context['coordinate_x']}, Y coordinate is {context['coordinate_y']}, Date for this action is {context['date']} and time is {context['time']}, Click this link for Location https://www.google.com/maps/search/?api=1&query={context['coordinate_x']},{context['coordinate_y']}",tab_close=True)
+            client.messages.create(from_="whatsapp:+14155238886",to=f"whatsapp:+91{x}",body=f"{context['first_name']} {context['last_name']} is in distress, X coordinate is {context['coordinate_x']}, Y coordinate is {context['coordinate_y']}, Date for this action is {context['date']} and time is {context['time']}, Click this link for Location https://www.google.com/maps/search/?api=1&query={context['coordinate_x']},{context['coordinate_y']}")
