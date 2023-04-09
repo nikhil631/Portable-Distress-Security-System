@@ -61,7 +61,7 @@
           <td>{{dat.coordinate_y}}</td>
           <td>{{dat.date_time|date:'l, F jS, Y'}}</td>
           <td>{{dat.date_time|date:'h:i A'}}</td>
-          {% if dat.emergency %}<td>Yes</td>{% else %}<td>No</td>{% endif %}
+          {% if dat.emergency %}<td style="color:red;">Yes</td>{% else %}<td style="color:lightgreen;">No</td>{% endif %}
           <td><a href="https://www.google.com/maps/search/?api=1&query={{dat.coordinate_x}},{{dat.coordinate_y}}"><button type="button" class="btn btn-outline-info btn-sm">See Location</button></a></td>
         </tr>
       {% endfor %}
