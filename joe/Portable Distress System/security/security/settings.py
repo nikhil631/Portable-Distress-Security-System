@@ -155,8 +155,6 @@ WHATSAPP_API_AUTH_TOKEN=config("WHATSAPP_API_AUTH_TOKEN")
 # Internal Ips is only for Debug_toolbar look at documentation here https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
 
 INTERNAL_IPS = [
-    # ...
     "127.0.0.1",
-    # ...
 ]
 
