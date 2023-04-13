@@ -43,9 +43,10 @@
   {% endfor %}
     
     {% if user.is_authenticated %}
-      <h3 style="color:white;">Your Past Records with us</h3> <br>
+      <h3 style="color:white; text-align: center;">Suraksha Portal</h3> <br>
       <h6 style="color:white;">Information for {{user.first_name}} {{user.last_name}}</h6>
       <h6 style="color:white;">Your Unique ID {{user.id}}</h6>
+      <h7 style="color:white;">Your Past Records with us</h7> <br>
       <table class="table table-dark table-hover table-bordered">
         <tr>
             <th>Coordinate_x</th>

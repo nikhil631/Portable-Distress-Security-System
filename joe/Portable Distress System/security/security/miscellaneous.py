@@ -92,7 +92,7 @@ def send_mail_to_relatives(user):
 
         mail.send_mail(
         subject=f"{context['first_name']} {context['last_name']} might be in danger",
-        from_email=context["email"],
+        from_email=settings.EMAIL_HOST_USER,
         recipient_list=emails_relations,
         html_message=render_to_string("security/email.html",context),
         message=strip_tags("security/emails.html")
