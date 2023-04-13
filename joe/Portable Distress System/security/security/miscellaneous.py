@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from twilio.rest import Client
 from django.conf import settings
+import redis
 
 def custom_commands(command:str):
     """
@@ -27,7 +28,8 @@ def cache_object_set(key:str,value:any,Default_Timeout:int=None,NX:bool=False):
     else:
         cache.set(key,value,Default_Timeout)
 
-def cache_object_get(key:str):
+
+def cache_object_get(key:str)->any:
     """
     Function to set object in cache,
     both NX and EX methods are supported,
@@ -35,14 +37,24 @@ def cache_object_get(key:str):
     return cache.get(key)
 
 
-def cache_object_get_or_set(key:str,value:any,Default_Timeout:int=None):
+def cache_object_get_or_set(key:str,value:any,Default_Timeout:int=None)->any:
     """
     Get or Set, If value doesn't exist in cache it creates the value,
     If value already exists in cache it just retrieves it
     """
     return cache.get_or_set(key,value,Default_Timeout)
 
+def cache_object_exists(key:str)->bool:
+    """
+    Object exists in cache or not
+    """
+    return cache.has_key(key)
 
+def cache_object_delete(key:str):
+    """
+    Function to delete a key from the cache
+    """
+    return cache.delete(key)
 def object_exists(factor,model):
     # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
     # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
@@ -82,7 +94,6 @@ def send_mail_to_relatives(user):
         context={
             "first_name":user.roll.roll.first_name,
             "last_name":user.roll.roll.last_name,
-            "email":user.roll.roll.email,
             "coordinate_x":user.coordinate_x,
             "coordinate_y":user.coordinate_y,
             "emergency":user.emergency,

@@ -39,9 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'widget_tweaks',
     'security',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -85,6 +87,18 @@ DATABASES = {
         'PORT': config("MYSQL_PORT"),
     }
 }
+
+# Cache settings
+CACHES_TTL=config("CACHES_TTL")
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/",
+    }
+}
+
+SESSION_ENGINE = "django.contrib.sessions.backends.cache" 
+
 
 
 # Password validation
@@ -134,6 +148,15 @@ EMAIL_HOST='smtp.gmail.com'
 EMAIL_PORT=587
 EMAIL_HOST_USER=config("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD=config("EMAIL_HOST_PASSWORD")
-
+# Whatsapp API Info
 WHATSAPP_API_SID=config("WHATSAPP_API_SID")
 WHATSAPP_API_AUTH_TOKEN=config("WHATSAPP_API_AUTH_TOKEN")
+
+# Internal Ips is only for Debug_toolbar look at documentation here https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
+
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
+

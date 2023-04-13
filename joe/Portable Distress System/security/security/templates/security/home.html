@@ -19,7 +19,7 @@
 </style>
   
 <body>
-{% if user.is_authenticated %}
+{% if authenticated %}
 <nav class="navbar navbar-expand-md navbar-light bg-dark">
     <ul class="nav">
       <li class="nav-item" >
@@ -33,7 +33,6 @@
       </li>
     </ul>
 </nav>
-{% endif %}
   {% for messg in messages %}
   {% if "success" in messg.tags %}
     <p style="color:lightgreen;">{{messg}}</p>
@@ -41,8 +40,6 @@
     <p style="color:red;">{{messg}}</p>
   {% endif %}
   {% endfor %}
-    
-    {% if user.is_authenticated %}
       <h3 style="color:white; text-align: center;">Suraksha Portal</h3> <br>
       <h6 style="color:white;">Information for {{user.first_name}} {{user.last_name}}</h6>
       <h6 style="color:white;">Your Unique ID {{user.id}}</h6>

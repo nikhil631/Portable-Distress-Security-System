@@ -24,9 +24,11 @@ def registration(request):
 
 def home(request):
     context={}
-    if request.user.is_authenticated:
-        context={"data":object_filter_orderby(factor={"roll_id":request.user.id},model="incoming_info",orderby="-id")}
-
+    if cache_object_exists(f"django.contrib.sessions.cache{request.session.session_key}"):
+        context={
+            "data":cache_object_get_or_set(f"user_home:{request.user.id}",object_filter_orderby(factor={"roll_id":request.user.id},model="incoming_info",orderby="-id"),settings.CACHES_TTL),
+            "authenticated":True,     
+        }
     return render(request,"security/home.html",context)
 
 def root(request):
@@ -65,8 +67,8 @@ def add_data(request,coor_x,coor_y,emerg,ids):
         "id":ids,
         "datetime":datetime.datetime.now(),
         }
-    
     object_creator(factor={"roll_id":ids,"coordinate_x":coor_x,"coordinate_y":coor_y,"emergency":emerg,"date_time":context["datetime"]},model="incoming_info")
+    cache_object_delete(f"user_home:{context['id']}")
     send_mail_to_relatives(user=object_filter_orderby(factor={"roll":ids},model="incoming_info",orderby="-id")[0])
     send_mobile_messages(user=object_filter_orderby(factor={"roll":ids},model="incoming_info",orderby="-id")[0])
     return render(request,"security/data_add.html",context)
