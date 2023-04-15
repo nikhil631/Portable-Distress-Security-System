@@ -15,6 +15,7 @@ def registration(request):
         if form.is_valid():
             form.save()
             object_creator(factor={"roll_id":object_get({'username':request.POST["username"]},"User").id,'phone':request.POST["phone"],'email':request.POST["email"]},model="contact_info")
+            cache_object_delete("all_users")
             messages.success(request,"Signed-Up Succesfully")
             return HttpResponseRedirect("/login/")
     context={
@@ -27,7 +28,7 @@ def home(request):
     if cache_object_exists(f"django.contrib.sessions.cache{request.session.session_key}"):
         context={
             "data":cache_object_get_or_set(f"user_home:{request.user.id}",object_filter_orderby(factor={"roll_id":request.user.id},model="incoming_info",orderby="-id"),settings.CACHES_TTL),
-            "authenticated":True,     
+            "authenticated":1,     
         }
     return render(request,"security/home.html",context)
 
@@ -51,7 +52,7 @@ def logins(request):
     return render(request,"security/login.html",context)
 
 def logouts(request):
-    if request.user.is_authenticated:
+    if cache_object_exists(f"django.contrib.sessions.cache{request.session.session_key}"):
         logout(request)
         messages.success(request,"Logout Successfull")
         return HttpResponseRedirect("/login/")
@@ -59,21 +60,29 @@ def logouts(request):
         messages.error(request,"Logout failed, Not Logged in currently")
         return HttpResponseRedirect("/login/")
 
-def add_data(request,coor_x,coor_y,emerg,ids):
+def add_data(request,coor_x,coor_y,emerg,ids,datetime=datetime.datetime.now()):
+    obj=object_filter({'roll_id':ids},"relation_users")
     context={
-        'x':coor_x,
-        'y':coor_y,
-        "emerg":emerg,
-        "id":ids,
-        "datetime":datetime.datetime.now(),
+            "first_name":obj[0].roll.roll.first_name,
+            "last_name":obj[0].roll.roll.last_name,
+            "coordinate_x":coor_x,
+            "coordinate_y":coor_y,
+            "emergency":emerg,
+            "date":format(datetime,"%d-%m-%Y"),
+            "time":format(datetime,'%I:%M %p'),
+            "id":ids,
+            "email":obj[0].roll.email,
+            "phone_relations":[x.relation.phone for x in obj],
+            "emails_relations":[x.relation.email for x in obj],
         }
-    object_creator(factor={"roll_id":ids,"coordinate_x":coor_x,"coordinate_y":coor_y,"emergency":emerg,"date_time":context["datetime"]},model="incoming_info")
-    cache_object_delete(f"user_home:{context['id']}")
-    send_mail_to_relatives(user=object_filter_orderby(factor={"roll":ids},model="incoming_info",orderby="-id")[0])
-    send_mobile_messages(user=object_filter_orderby(factor={"roll":ids},model="incoming_info",orderby="-id")[0])
+    cache_object_queue_add("hel",context)
+    # object_creator(factor={"roll_id":ids,"coordinate_x":coor_x,"coordinate_y":coor_y,"emergency":emerg,"date_time":datetime},model="incoming_info")
+    # cache_object_delete(f"user_home:{context['id']}")
     return render(request,"security/data_add.html",context)
 def add_relatives(request):
-    context={"people":object_all("User")}
+    context={
+        "people":cache_object_get_or_set(f"all_users",object_all("User"),settings.CACHES_TTL),
+        }
     if request.method=="POST":
         try:
             if str(request.POST["relatives"]) in [str(x.relation_id) for x in object_filter(factor={"roll_id":request.user.id},model="relation_users")]:
@@ -88,11 +97,15 @@ def add_relatives(request):
     return render(request,"security/relatives_add.html",context)
 
 def rem_relatives(request):
-    relatives=[x for x in object_filter(factor={"roll_id":request.user.id},model="relation_users")]
-    if request.method=="POST":
-        relatives=[object_get(factor={"roll_id":request.user.id,"relation_id":x},model="relation_users").delete() for x in request.POST if request.POST[x]=="on"]
-        return HttpResponseRedirect("/rem_relatives/")  
-    context={
-        "relatives":relatives,
-        }
+    if cache_object_exists(f"django.contrib.sessions.cache{request.session.session_key}"):
+        relatives=[x for x in object_filter(factor={"roll_id":request.user.id},model="relation_users")]
+        if request.method=="POST":
+            relatives=[object_get(factor={"roll_id":request.user.id,"relation_id":x},model="relation_users").delete() for x in request.POST if request.POST[x]=="on"]
+            return HttpResponseRedirect("/rem_relatives/")  
+        context={
+            "relatives":relatives,
+            "authenticated":1,
+            }
+    else:
+        context={}
     return render(request,"security/rem_relatives.html",context)

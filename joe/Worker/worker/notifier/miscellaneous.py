@@ -7,9 +7,9 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from twilio.rest import Client
 from django.conf import settings
-from django_redis import get_redis_connection
 import json
-import redis
+import redis,datetime
+from apscheduler.schedulers.background import BackgroundScheduler
 
 def custom_commands(command:str):
     """
@@ -101,42 +101,40 @@ def object_remove(factor,model):
     # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
     return eval(model).objects.filter(**factor)
 
-def send_mail_to_relatives(user):
-    emails_relations=[x.relation.email for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]
+def send_mail_to_relatives(context):
     # roll.roll.id means going from table this table incoming_info(roll)->contact_info(roll)->auth_user(id)
-    if len(emails_relations)!=0:
-        context={
-            "first_name":user.roll.roll.first_name,
-            "last_name":user.roll.roll.last_name,
-            "coordinate_x":user.coordinate_x,
-            "coordinate_y":user.coordinate_y,
-            "emergency":user.emergency,
-            "date":format(user.date_time,"%d-%m-%Y"),
-            "time":format(user.date_time,'%I:%M %p'),
-        }
-
+    if len(context['emails_relations'])!=0:
         mail.send_mail(
         subject=f"{context['first_name']} {context['last_name']} might be in danger",
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=emails_relations,
-        html_message=render_to_string("security/email.html",context),
-        message=strip_tags("security/emails.html")
+        from_email="nikhil.tomar.22cse@bmu.edu.in",
+        recipient_list=context['emails_relations'],
+        html_message=render_to_string("notifier/email.html",context),
+        message=strip_tags("notifier/email.html"),
         )
 
-
-def send_mobile_messages(user):
+def send_mobile_messages(context):
     # Twillio Implementation below
-    context={
-    "first_name":user.roll.roll.first_name,
-    "last_name":user.roll.roll.last_name,
-    "coordinate_x":user.coordinate_x,
-    "coordinate_y":user.coordinate_y,
-    "emergency":user.emergency,
-    "date":format(user.date_time,"%d-%m-%Y"),
-    "time":format(user.date_time,'%I:%M %p'),
-    }
-    phone_relations=[x.relation.phone for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]
-    if len(phone_relations)!=0:
+    if len(context['phone_relations'])!=0:
         client=Client(settings.WHATSAPP_API_SID,settings.WHATSAPP_API_AUTH_TOKEN)
-        for x in phone_relations:
+        for x in context['phone_relations']:
             client.messages.create(from_="whatsapp:+14155238886",to=f"whatsapp:+91{x}",body=f"{context['first_name']} {context['last_name']} is in distress, X coordinate is {context['coordinate_x']}, Y coordinate is {context['coordinate_y']}, Date for this action is {context['date']} and time is {context['time']}, Click this link for Location https://www.google.com/maps/search/?api=1&query={context['coordinate_x']},{context['coordinate_y']}")
+
+def notifiers():
+    redis_conn = redis.StrictRedis.from_url(settings.CACHES["default"]["LOCATION"])
+    while True:
+        request=redis_conn.brpop("hel")
+        request=json.loads(request[1])
+        try:
+            send_mail_to_relatives(request)
+            send_mobile_messages(request)
+        except Exception as e:
+            print(e)
+
+scheduler = BackgroundScheduler()
+def start_scheduler():
+    scheduler.add_job(notifiers, 'date', run_date=datetime.datetime.now())
+    scheduler.start()
+
+def stop_scheduler():
+    scheduler.shutdown()
+
