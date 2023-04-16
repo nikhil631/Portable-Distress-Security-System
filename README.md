@@ -6,7 +6,7 @@ Now what is JOE, It stand for joy of engineering, a subject in my college in whi
 1. Copy the .env file after defining config in it from here to `"joe\Portable Distress System\security\security"` For Worker run `"joe\Worker\worker\worker"`
 2. Run `pip install -r "joe\Portable Distress System\security\requirements.txt" ` For Worker run `pip install -r "joe\Worker\worker\requirements.txt" ` 
 
-3. Finally run `python3 joe\Portable Distress System\security\manage.py runserver 0.0.0.0:8000` For Worker run `python3 joe\Worker\worker\manage.py runserver 0.0.0.0:8000`
+3. Finally run `python3 joe\Portable Distress System\security\manage.py runserver 0.0.0.0:8000` For Worker run `python3 joe\Worker\worker\manage.py runserver 0.0.0.0:8010`
 
 # Emails and Whatsapp messages
 I have added Asynchronous support to this web app by creating a different django app "worker" which will on startup run a python script to continuously check redis queue for updates, The name of this redis queue can be configured in the .env file as REDIS_WORKER_QUEUE
