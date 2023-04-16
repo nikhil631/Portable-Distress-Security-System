@@ -75,9 +75,9 @@ def add_data(request,coor_x,coor_y,emerg,ids,datetime=datetime.datetime.now()):
             "phone_relations":[x.relation.phone for x in obj],
             "emails_relations":[x.relation.email for x in obj],
         }
-    cache_object_queue_add("hel",context)
-    # object_creator(factor={"roll_id":ids,"coordinate_x":coor_x,"coordinate_y":coor_y,"emergency":emerg,"date_time":datetime},model="incoming_info")
-    # cache_object_delete(f"user_home:{context['id']}")
+    cache_object_queue_add(settings.REDIS_WORKER_QUEUE,context)
+    object_creator(factor={"roll_id":ids,"coordinate_x":coor_x,"coordinate_y":coor_y,"emergency":emerg,"date_time":datetime},model="incoming_info")
+    cache_object_delete(f"user_home:{context['id']}")
     return render(request,"security/data_add.html",context)
 def add_relatives(request):
     context={

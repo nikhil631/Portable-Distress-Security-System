@@ -98,7 +98,7 @@ CACHES = {
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache" 
-
+REDIS_WORKER_QUEUE=config("REDIS_WORKER_QUEUE")
 
 
 # Password validation

@@ -92,6 +92,7 @@ CACHES = {
     }
 }
 
+REDIS_WORKER_QUEUE=config("REDIS_WORKER_QUEUE")
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
