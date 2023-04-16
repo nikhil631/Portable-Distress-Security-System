@@ -1,11 +1,13 @@
-# This Repository is for all my JOE projects
-Hello, and welcome to this repository, This repository is collection of all the JOE projects.
-Now what is JOE, It stand for joy of engineering, a subject in my college in which students have to create and develop new methods and technologies.
+# Portable Distress Security System
+This is a project associated with one of my courses which is Joy Of Engineering, This security web app is resposible for handling accounts, sending emails as well as whatsapp messages.
+
+# Initial idea of this project
+When a person is in distress he/she presses a button on our device, this device then sends a small request to our webserver which then takes this request and sends emails and messages to all the relatives of this user.
+[Described in detail here](#how-does-it-work)
 
 # Web App Installation
 1. Copy the .env file after defining config in it from here to `"joe\Portable Distress System\security\security"` For Worker run `"joe\Worker\worker\worker"`
 2. Run `pip install -r "joe\Portable Distress System\security\requirements.txt" ` For Worker run `pip install -r "joe\Worker\worker\requirements.txt" ` 
-
 3. Finally run `python3 joe\Portable Distress System\security\manage.py runserver 0.0.0.0:8000` For Worker run `python3 joe\Worker\worker\manage.py runserver 0.0.0.0:8010`
 
 # Emails and Whatsapp messages
