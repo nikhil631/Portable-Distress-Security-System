@@ -37,9 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'widget_tweaks',
     'security',
+    'api',
+    # Third party apps
+    'widget_tweaks',
     'debug_toolbar',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -157,4 +160,3 @@ WHATSAPP_API_AUTH_TOKEN=config("WHATSAPP_API_AUTH_TOKEN")
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
-

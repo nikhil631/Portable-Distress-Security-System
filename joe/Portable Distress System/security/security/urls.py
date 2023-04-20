@@ -23,9 +23,9 @@ urlpatterns = [
     path('registration/',views.registration),
     path('login/',views.logins),
     path('logout/',views.logouts),
-    path('data/<str:coor_x>_<str:coor_y>_<int:emerg>_<int:ids>/',views.add_data),
     path('data/',views.root),
     path('add_relatives/',views.add_relatives),
     path('rem_relatives/',views.rem_relatives),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('api/',include('api.urls')),
 ]

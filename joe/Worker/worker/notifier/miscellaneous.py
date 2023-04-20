@@ -122,15 +122,15 @@ def send_mobile_messages(context):
 def notifiers():
     redis_conn = redis.StrictRedis.from_url(settings.CACHES["default"]["LOCATION"])
     while True:
-        
         request=redis_conn.brpop(settings.REDIS_WORKER_QUEUE)
-        request=json.loads(request[1])
-        try:
-            print("entries found")
-            send_mail_to_relatives(request)
-            send_mobile_messages(request)
-        except Exception as e:
-            print(e)
+        if request!=None:
+            request=json.loads(request[1])
+            try:
+                print("entries found")
+                send_mail_to_relatives(request)
+                send_mobile_messages(request)
+            except Exception as e:
+                print(e)
 
 scheduler = BackgroundScheduler()
 def start_scheduler():
