@@ -43,9 +43,14 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'debug_toolbar',
     'rest_framework',
+    'rest_framework.authtoken',
+    'django_browser_reload',
+    'tailwind',
+    'theme',
 ]
 
 MIDDLEWARE = [
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -156,7 +161,17 @@ WHATSAPP_API_SID=config("WHATSAPP_API_SID")
 WHATSAPP_API_AUTH_TOKEN=config("WHATSAPP_API_AUTH_TOKEN")
 
 # Internal Ips is only for Debug_toolbar look at documentation here https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
-
+# Tailwind information is also below
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+TAILWIND_APP_NAME = 'theme'
+NPM_BIN_PATH= r"D:\Program Files\nodejs\npm.cmd"
+#  Rest api framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}

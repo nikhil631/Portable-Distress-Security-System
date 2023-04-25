@@ -14,7 +14,9 @@ def registration(request):
             return HttpResponseRedirect("/registration/")
         if form.is_valid():
             form.save()
-            object_creator(factor={"roll_id":object_get({'username':request.POST["username"]},"User").id,'phone':request.POST["phone"],'email':request.POST["email"]},model="contact_info")
+            user=object_get({'username':request.POST["username"]},"User")
+            object_creator(factor={"roll_id":user.id,'phone':request.POST["phone"],'email':request.POST["email"]},model="contact_info")
+            token_generate(user)
             cache_object_delete("all_users")
             messages.success(request,"Signed-Up Succesfully")
             return HttpResponseRedirect("/login/")
@@ -28,7 +30,8 @@ def home(request):
     if cache_object_exists(f"django.contrib.sessions.cache{request.session.session_key}"):
         context={
             "data":cache_object_get_or_set(f"user_home:{request.user.id}",object_filter_orderby(factor={"roll_id":request.user.id},model="incoming_info",orderby="-id"),settings.CACHES_TTL),
-            "authenticated":1,     
+            "authenticated":1, 
+            "token": token_get(request.user.id),
         }
     return render(request,"security/home.html",context)
 

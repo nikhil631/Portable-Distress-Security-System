@@ -27,5 +27,6 @@ urlpatterns = [
     path('add_relatives/',views.add_relatives),
     path('rem_relatives/',views.rem_relatives),
     path('__debug__/', include('debug_toolbar.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
     path('api/',include('api.urls')),
 ]

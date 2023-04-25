@@ -6,10 +6,17 @@ from django.db.models import Q
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from twilio.rest import Client
+from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django_redis import get_redis_connection
 import json
 import redis
+
+def token_generate(user_instance):
+    return Token.objects.create(user=user_instance)
+
+def token_get(user_id):
+    return Token.objects.get(user_id=user_id)
 
 def custom_commands(command:str):
     """
