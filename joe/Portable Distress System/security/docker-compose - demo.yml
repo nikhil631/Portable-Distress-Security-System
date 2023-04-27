@@ -5,8 +5,8 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_DATABASE=dbos
-      - MYSQL_ROOT_PASSWORD=12421**
+      - MYSQL_DATABASE=security
+      - MYSQL_ROOT_PASSWORD=123456789
     volumes:
       - /tmp/app/mysqld:/var/run/mysqld
       - ./mysql_dump:/docker-entrypoint-initdb.d
@@ -21,10 +21,10 @@ services:
         condition: "service_healthy"
     environment:
     - MYSQL_USER=root
-    - MYSQL_DATABASE=dbos
-    - MYSQL_ROOT_PASSWORD=12421**
-    - EMAIL_HOST_USER=kalihun@netos.com
-    - EMAIL_HOST_PASSWORD=sophianice@123
+    - MYSQL_DATABASE=security
+    - MYSQL_ROOT_PASSWORD=123456789
+    - EMAIL_HOST_USER=johnsmit@gmail.com
+    - EMAIL_HOST_PASSWORD=**324523
     - MYSQL_PORT=3306
     build: .
     command: python manage.py runserver 0.0.0.0:8000
