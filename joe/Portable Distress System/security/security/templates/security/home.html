@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <head>
+
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,9 +17,39 @@
       margin:auto;
       transform: translateY(80%);
     }
+    .btn-primary {
+      background-color:#0075eb ;
+      border-color: #0075eb;
+    }
+    .btn-primary:hover {
+      background-color: #0d47a1;
+      border-color: #0d47a1;
+    }
+    .api_key_form {
+      background-color: transparent;
+      border-color: transparent;
+      color:#5a83c1; 
+    }
+     
 </style>
   
 <body>
+  
+<script type="text/javascript">
+  function togglePassword() {
+    var password = document.getElementById("password");
+    var button = document.getElementById("showPassword");
+  
+    if (password.type === "password") {
+      password.type = "text";
+      button.textContent = "Hide API Key";
+    } else {
+      password.type = "password";
+      button.textContent = "Show API Key";
+    }
+  }
+</script>   
+
 {% if authenticated %}
 <nav class="navbar navbar-expand-md navbar-light bg-dark">
     <ul class="nav">
@@ -41,10 +72,15 @@
   {% endif %}
   {% endfor %}
       <h3 style="color:white; text-align: center;">Suraksha Portal</h3> <br>
+      <div>
       <h6 style="color:white;">Information for {{user.first_name}} {{user.last_name}}</h6>
-      <h6 style="color:white;">Your Unique ID {{user.id}}</h6>
+      <button id="showPassword" class="btn btn-primary rounded-pill" onclick="togglePassword()">Show API Key</button>
+      <input type="password" class="api_key_form" style="width: 400px;" id="password" value={{token}} disabled>
+      </div>
+      <br>
       <h7 style="color:white;">Your Past Records with us</h7> <br>
-      <table class="table table-dark table-hover table-bordered">
+      <div class="table-responsive">
+      <table class="table table-dark table-hover">
         <tr>
             <th>Coordinate_x</th>
             <th>Coordinate_y</th>
@@ -64,6 +100,7 @@
         </tr>
       {% endfor %}
       </table>
+    </div>
     {% else %}
     <h7 style="color: white;">Your are not logged in to view this page, Please log in</h7> <br>
     <div ALIGN='center' class="vertical-center">

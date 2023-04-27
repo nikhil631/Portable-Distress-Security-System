@@ -43,9 +43,12 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'debug_toolbar',
     'rest_framework',
+    'rest_framework.authtoken',
+    'django_browser_reload',
 ]
 
 MIDDLEWARE = [
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -128,11 +131,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
-USE_TZ = False
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -156,7 +159,14 @@ WHATSAPP_API_SID=config("WHATSAPP_API_SID")
 WHATSAPP_API_AUTH_TOKEN=config("WHATSAPP_API_AUTH_TOKEN")
 
 # Internal Ips is only for Debug_toolbar look at documentation here https://django-debug-toolbar.readthedocs.io/en/latest/installation.html
-
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+#  Rest api framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}
