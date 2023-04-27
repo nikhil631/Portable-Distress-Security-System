@@ -36,7 +36,7 @@ def home(request):
     return render(request,"security/home.html",context)
 
 def root(request):
-    return HttpResponseRedirect("/home")
+    return HttpResponseRedirect("/home/")
 
 def logins(request):
     form=user_sign()
