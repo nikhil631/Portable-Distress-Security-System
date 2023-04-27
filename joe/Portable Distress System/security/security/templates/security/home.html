@@ -7,8 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     {% load static %}
-    {% load static tailwind_tags %}
-    {% tailwind_css %}
     <link rel="stylesheet" href="{% static 'security/bootstrap.min.css' %}">
 </head>
 <style>
@@ -19,8 +17,20 @@
       margin:auto;
       transform: translateY(80%);
     }
-
-    
+    .btn-primary {
+      background-color:#0075eb ;
+      border-color: #0075eb;
+    }
+    .btn-primary:hover {
+      background-color: #0d47a1;
+      border-color: #0d47a1;
+    }
+    .api_key_form {
+      background-color: transparent;
+      border-color: transparent;
+      color:#5a83c1; 
+    }
+     
 </style>
   
 <body>
@@ -64,11 +74,12 @@
       <h3 style="color:white; text-align: center;">Suraksha Portal</h3> <br>
       <div>
       <h6 style="color:white;">Information for {{user.first_name}} {{user.last_name}}</h6>
-      <button id="showPassword" class="bg-blue-800 hover:bg-blue-700 text-white font-bold py-1.5 px-3 rounded-full" onclick="togglePassword()">Show API Key</button>
-      <input type="password" class="bg-inherit text-slate-400 border-transparent" style="width: 400px;" id="password" value={{token}} disabled>
+      <button id="showPassword" class="btn btn-primary rounded-pill" onclick="togglePassword()">Show API Key</button>
+      <input type="password" class="api_key_form" style="width: 400px;" id="password" value={{token}} disabled>
       </div>
       <br>
       <h7 style="color:white;">Your Past Records with us</h7> <br>
+      <div class="table-responsive">
       <table class="table table-dark table-hover">
         <tr>
             <th>Coordinate_x</th>
@@ -89,6 +100,7 @@
         </tr>
       {% endfor %}
       </table>
+    </div>
     {% else %}
     <h7 style="color: white;">Your are not logged in to view this page, Please log in</h7> <br>
     <div ALIGN='center' class="vertical-center">
