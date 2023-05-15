@@ -5,6 +5,8 @@ This is a project associated with one of my courses which is Joy Of Engineering,
 When a person is in distress he/she presses a button on our device, this device then sends a small request to our webserver which then takes this request and sends emails and messages to all the relatives of this user.
 [Described in detail here](#how-does-it-work)
 
+# System Design of API
+![alt text](http://url/to/img.png) 
 # Web App Installation
 1. Copy the .env file after defining config in it from here to `"joe\Portable Distress System\security\security"` For Worker run `"joe\Worker\worker\worker"`
 2. Run `pip install -r "joe\Portable Distress System\security\requirements.txt" ` For Worker run `pip install -r "joe\Worker\worker\requirements.txt" ` 
