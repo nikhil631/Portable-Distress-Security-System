@@ -20,4 +20,4 @@ class relation_users(models.Model):
     roll=models.ForeignKey(contact_info,to_field='roll',on_delete=models.CASCADE,related_name="rolls")
     relation=models.ForeignKey(contact_info,to_field='roll',on_delete=models.CASCADE,related_name="relation")
     def __str__(self):
-        return f"{self.roll.roll.id} {self.roll.roll.username}"
+        return f"{self.roll.roll.id} {self.roll.roll.username} -> {self.relation.roll.id} {self.relation.roll.username}"
