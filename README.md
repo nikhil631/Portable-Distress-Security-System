@@ -17,7 +17,7 @@ I have added Asynchronous support to this web app by creating a different django
 
 # How does it work
 Let me explain by consider the url of web app be webapp.com and worker be worker.com.
-When we have to add data for a user we have to access the page webapp.com/data/coordinate-x_coordinate-y_emergency_user-id/ this link is supposed to be accessed when we have to add data about distress or accidents, coordinate-x and coordinate-y are strings and are basically latitude and longitude.
+When we have to add data we have to send a post request to webapp.com/data/coordinate-x_coordinate-y_emergency/ along with headers containing the unique token when we have to add data about distress or accidents, coordinate-x and coordinate-y are strings and are basically latitude and longitude.
 emergency is a boolean value and will only accept value such as 1 or 0, user-id is a field which is used to here to identify this data addition for which user, Every user has a unique id shown on their homepage.
 
 Whenever this link is accessed lets say webapp.com/data/1_1_1_9/ this means that coordinate x is 1 coordiante y is 1 emergency is set to True and user id is 9, (this will only work if userid is available in our database the data won't be added otherwise). quickly a json format dictionary is made which contains all the information of the user from first_name,last_name to email, id , relatives emails and relatives phone numbers, this is then quickly added to a Redis Queue, this information is also created in sql database for homepage and future referencing, This step does not take much time and ends in less then a second and the user which posted this gets his return page quickly.
