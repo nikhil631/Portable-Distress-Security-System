@@ -6,7 +6,7 @@ When a person is in distress he/she presses a button on our device, this device 
 [Described in detail here](#how-does-it-work)
 
 # System Design of API
-![alt text](https://github.com/nikhil631/Portable-Distress-Security-System/blob/main/images/Network%20diagram%20example.png) 
+![ScreenShot](/images/network_diagram.png) 
 # Web App Installation
 1. Copy the .env file after defining config in it from here to `"joe\Portable Distress System\security\security"` For Worker run `"joe\Worker\worker\worker"`
 2. Run `pip install -r "joe\Portable Distress System\security\requirements.txt" ` For Worker run `pip install -r "joe\Worker\worker\requirements.txt" ` 
