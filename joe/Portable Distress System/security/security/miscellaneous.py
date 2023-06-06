@@ -76,37 +76,50 @@ def cache_object_queue_add(key:str,value:any):
     redis_conn = redis.StrictRedis.from_url(settings.CACHES['default']['LOCATION'])
     redis_conn.rpush(key,value)
 
-def object_exists(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_exists(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.filter(**factor).exists()
-def object_get(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_get(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.get(**factor)
 
-def object_creator(factor,model):
+def object_creator(factor:dict,model:str):
     # this function is to create objects in user defined models
     return eval(model).objects.create(**factor)
-def object_filter(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_filter(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.filter(**factor)
 
-def object_filter_orderby(factor,model,orderby):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_filter_orderby(factor:dict,model:str,orderby):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.filter(**factor).order_by(orderby)
 
 def object_all(model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.all()
 
-def object_remove(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
-    return eval(model).objects.filter(**factor)
+def object_remove(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
+
+    return eval(model).objects.filter(**factor).delete()
 
 def send_mail_to_relatives(user):
     emails_relations=[x.relation.email for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]

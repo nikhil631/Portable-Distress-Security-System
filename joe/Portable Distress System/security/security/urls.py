@@ -25,6 +25,8 @@ urlpatterns = [
     path('logout/',views.logouts),
     path('data/',views.root),
     path('add_relatives/',views.add_relatives),
+    path('profile/<int:relation_id>',views.profile),
+    path('notifications/',views.notifications),
     path('rem_relatives/',views.rem_relatives),
     path('__debug__/', include('debug_toolbar.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
