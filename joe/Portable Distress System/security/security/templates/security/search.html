@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load widget_tweaks %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Relations</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'security/bootstrap.min.css' %}">
+</head>
+<style>
+body {
+    background-color: #212529;
+}
+ .vertical-center {
+    width:98%;
+    transform: translateY(50%);
+    margin: 0.5%
+}
+.submit-right{
+  width:10%;
+  transform: translateY(50%);
+  margin: 0.5%
+}
+  </style>
+<body>
+  <div class="form-group">
+    <form action="", method="POST">
+        {% csrf_token %}
+        {% render_field form.search placeholder="Nick Smith" class="form-control vertical-center" %}
+        <input type="submit" class="btn btn-primary form-control submit-right " value="Search">
+    </form>
+  </div><br><br>
+
+  {% if query %}
+  <table class="table table-dark table-hover">
+    <tr>
+      <td>First Name</td>
+      <td>Last Name</td>
+      <td>Username</td>
+      <td>Profile</td>
+    </tr>
+      {% for query_in in query %}
+      <tr>
+        <td>{{query_in.first_name}}</td>
+        <td>{{query_in.last_name}}</td>
+        <td>{{query_in.username}}</td>
+        <td><a href="/profile/{{query_in.id}}"><button class="btn btn-primary mb-1">Profile</button></a></td>
+      </tr>
+      {% endfor %}
+  <table>
+  {% endif %}
+</body>
+</html> 

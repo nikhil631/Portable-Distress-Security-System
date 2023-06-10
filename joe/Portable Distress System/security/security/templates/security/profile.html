@@ -55,10 +55,12 @@
 </table>
 <form action="" method="POST">
   {% csrf_token %}
-{% if relative_exists %}
-<button type="submit" class="btn btn-danger rounded-pill">Remove Relative</button>
-{% else %}
-<button type="submit" class="btn btn-primary rounded-pill">Add Relative</button>
+{% if not same_user %}
+  {% if relative_exists %}
+  <button type="submit" class="btn btn-danger rounded-pill">Remove Relative</button>
+  {% else %}
+  <button type="submit" class="btn btn-primary rounded-pill">Add Relative</button>
+  {% endif %}
 {% endif %}
 </form>
 </body>

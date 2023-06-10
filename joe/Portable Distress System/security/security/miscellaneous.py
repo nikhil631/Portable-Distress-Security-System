@@ -9,8 +9,8 @@ from twilio.rest import Client
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django_redis import get_redis_connection
-import json
-import redis
+from django.contrib.postgres.search import SearchVector
+import json,redis
 
 def token_generate(user_instance):
     return Token.objects.create(user=user_instance)
@@ -120,6 +120,14 @@ def object_remove(factor:dict,model:str):
     """
 
     return eval(model).objects.filter(**factor).delete()
+
+def full_text_search(factor:list,model:str,search_term:str):
+    """
+    factor is a list ["username","email"] these are fields to be searched < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    search_term is the string you want to search
+    """
+    return eval(model).objects.annotate(search=SearchVector(*factor)).filter(search=search_term)
 
 def send_mail_to_relatives(user):
     emails_relations=[x.relation.email for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]

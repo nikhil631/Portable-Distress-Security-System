@@ -81,10 +81,17 @@ def add_relatives(request):
                 return HttpResponseRedirect("/add_relatives/")                
     return render(request,"security/relatives_add.html",context)
 
+def search(request):
+    form=search_form()
+    context={"form":form}
+    if request.method=="POST":
+        context["query"]=full_text_search(["username","first_name","last_name","email"],model="User",search_term=request.POST['search'])
+    return render(request,"security/search.html",context)
+
 def profile(request,relation_id):
     if cache_object_exists(f"django.contrib.sessions.cache{request.session.session_key}"):
         if object_exists({"id":relation_id},"User"):
-            context={"object":object_get({"id":relation_id},"User"),"relative_exists":object_exists({"roll_id":request.user.id,"relation_id":relation_id},"relation_users")}
+            context={"object":object_get({"id":relation_id},"User"),"relative_exists":object_exists({"roll_id":request.user.id,"relation_id":relation_id},"relation_users"),"same_user":(request.user.id==relation_id)}
             if request.method=="POST":
                 if context["relative_exists"]!=True:
                     if not(object_exists({"user_from_id":request.user.id,"user_to_id":relation_id},"friend_requests")) and send_friend_request(request.user.id,relation_id):
@@ -105,11 +112,11 @@ def profile(request,relation_id):
         return HttpResponseRedirect("/login/")
 
 def notifications(request):
-    context={"requests":object_filter_orderby({"user_from_id":request.user.id},"friend_requests","date")}
+    context={"requests":object_filter_orderby({"user_to_id":request.user.id},"friend_requests","date")}
     if request.method=="POST":
-        for x in list(request.POST)[1:]:
-            add_specific_relative(request.user.id,x)
-            object_remove({"user_from_id":x,"user_to_id":request.user.id},"friend_requests")   
+        for relation_id in list(request.POST)[1:]:
+            add_specific_relative(request.user.id,relation_id)
+            object_remove({"user_from_id":relation_id,"user_to_id":request.user.id},"friend_requests")   
         messages.success(request,"All requests accepted")
         return render(request,"security/notifications.html",context)    
     return render(request,"security/notifications.html",context)
@@ -127,3 +134,13 @@ def rem_relatives(request):
     else:
         context={}
     return render(request,"security/rem_relatives.html",context)
+
+
+
+
+
+
+
+
+
+

@@ -85,12 +85,12 @@ WSGI_APPLICATION = 'security.wsgi.application'
 
 DATABASES = {
     'default':{
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':config("MYSQL_DATABASE"),
-        'USER': config("MYSQL_USER"),
-        'PASSWORD': config("MYSQL_ROOT_PASSWORD"),
-        'HOST': config("MYSQL_HOST"),
-        'PORT': config("MYSQL_PORT"),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':config("POSTGRESQL_DATABASE"),
+        'USER': config("POSTGRESQL_USER"),
+        'PASSWORD': config("POSTGRESQL_ROOT_PASSWORD"),
+        'HOST': config("POSTGRESQL_HOST"),
+        'PORT': config("POSTGRESQL_PORT"),
     }
 }
 

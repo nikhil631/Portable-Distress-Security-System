@@ -8,7 +8,9 @@ def add_specific_relative(roll:int,relation:int)->bool:
     try:
         if str(relation) in [str(x.relation_id) for x in object_filter(factor={"roll_id":roll},model="relation_users")]:
             raise Exception([1062,"Duplication found"])
-        object_creator(factor={"roll_id":roll,"relation_id":relation},model="relation_users")
+        else:
+            object_creator(factor={"roll_id":roll,"relation_id":relation},model="relation_users")
+            object_creator(factor={"roll_id":relation,"relation_id":roll},model="relation_users")
         return True
     except Exception as e:
         return False
@@ -23,5 +25,5 @@ def remove_relative(roll:int,relation:int)->bool:
     """
     Function to remove a friend from relations
     """
-    if object_remove({"roll_id":roll,"relation_id":relation},"relation_users"):
+    if object_remove({"roll_id":roll,"relation_id":relation},"relation_users") and object_remove({"roll_id":relation,"relation_id":roll}):
         return True
