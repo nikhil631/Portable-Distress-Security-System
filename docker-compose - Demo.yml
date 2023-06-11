@@ -60,15 +60,15 @@ services:
         condition: "service_healthy"
     build: ./joe/Worker/worker/
     environment:
-      - EMAIL_HOST_USER=
-      - EMAIL_HOST_PASSWORD=
+      - EMAIL_HOST_USER=<Gmail SMTP allowed email>
+      - EMAIL_HOST_PASSWORD=<GMAIL email Password>
       - CACHES_TTL=900
       - REDIS_PORT=6379
       - REDIS_HOST=db_CACHE
       - REDIS_WORKER_QUEUE=nice
       - REDIS_DB=0
-      - WHATSAPP_API_SID=
-      - WHATSAPP_API_AUTH_TOKEN=
+      - WHATSAPP_API_SID=<Twilio API SID >
+      - WHATSAPP_API_AUTH_TOKEN=<Twilio API AUTH TOKEN>
     command: bash -c "python manage.py runserver 0.0.0.0:8010"
     networks:
       - backend
