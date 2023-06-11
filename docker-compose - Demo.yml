@@ -44,16 +44,12 @@ services:
       - POSTGRESQL_HOST=db_SQL
       - POSTGRESQL_DATABASE=security
       - POSTGRESQL_ROOT_PASSWORD=123456789
-      - EMAIL_HOST_USER=nikhil.tomar.22cse@bmu.edu.in
-      - EMAIL_HOST_PASSWORD=Nikhil@931
       - POSTGRESQL_PORT=5432
       - CACHES_TTL=900
       - REDIS_PORT=6379
       - REDIS_HOST=db_CACHE
       - REDIS_WORKER_QUEUE=nice
       - REDIS_DB=0
-      - WHATSAPP_API_SID=AC00bd27af7b3c4f46962474972a21bdbe
-      - WHATSAPP_API_AUTH_TOKEN=752476eac44af83b421c427aee619c28
     command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     ports:
       - 8200:8000
@@ -71,8 +67,8 @@ services:
       - REDIS_HOST=db_CACHE
       - REDIS_WORKER_QUEUE=nice
       - REDIS_DB=0
-      - WHATSAPP_API_SID=AC00bd27af7b3c4f46962474972a21bdbe
-      - WHATSAPP_API_AUTH_TOKEN=752476eac44af83b421c427aee619c28
+      - WHATSAPP_API_SID=
+      - WHATSAPP_API_AUTH_TOKEN=
     command: bash -c "python manage.py runserver 0.0.0.0:8010"
     networks:
       - backend
