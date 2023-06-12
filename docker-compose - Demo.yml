@@ -1,0 +1,82 @@
+version: '3'
+services:
+  db_SQL:
+    image: postgres:latest
+    networks:
+      - backend
+    expose:
+      - 5432
+    environment:
+      - POSTGRES_PASSWORD=123456789	
+      - POSTGRES_USER=root
+      - POSTGRES_DB=root
+    volumes:
+      - ./postgres_dump/docker_postgres_init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 10s 
+      timeout: 10s
+      retries: 5
+
+  db_CACHE:
+    image: redis/redis-stack:latest
+    networks:
+      - backend
+    expose:
+      - 6379
+    healthcheck:
+      test: ["CMD","redis-cli","ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+  web:
+    depends_on:
+      db_SQL:
+        condition: "service_healthy"
+      db_CACHE:
+        condition: "service_healthy"
+    networks:
+      - backend
+    build: ./joe/Portable Distress System/security/
+    environment:
+      - POSTGRESQL_USER=root
+      - POSTGRESQL_HOST=db_SQL
+      - POSTGRESQL_DATABASE=security
+      - POSTGRESQL_ROOT_PASSWORD=123456789
+      - POSTGRESQL_PORT=5432
+      - CACHES_TTL=900
+      - REDIS_PORT=6379
+      - REDIS_HOST=db_CACHE
+      - REDIS_WORKER_QUEUE=nice
+      - REDIS_DB=0
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8200:8000
+
+  workers:
+    depends_on:
+      db_CACHE:
+        condition: "service_healthy"
+    build: ./joe/Worker/worker/
+    environment:
+      - EMAIL_HOST_USER=<Gmail SMTP allowed email>
+      - EMAIL_HOST_PASSWORD=<GMAIL email Password>
+      - CACHES_TTL=900
+      - REDIS_PORT=6379
+      - REDIS_HOST=db_CACHE
+      - REDIS_WORKER_QUEUE=nice
+      - REDIS_DB=0
+      - WHATSAPP_API_SID=<Twilio API SID >
+      - WHATSAPP_API_AUTH_TOKEN=<Twilio API AUTH TOKEN>
+    command: bash -c "python manage.py runserver 0.0.0.0:8010"
+    networks:
+      - backend
+    deploy:
+      mode: replicated
+      replicas: 3
+
+
+networks:
+  backend:
+    driver: bridge

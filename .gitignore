@@ -2,3 +2,4 @@ __pycache__/
 joe/Portable Distress System/security/security/.env
 joe/Worker/worker/worker/.env
 joe/Portable Distress System/security/docker-compose.yml
+docker-compose.yml

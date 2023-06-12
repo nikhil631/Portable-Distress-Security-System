@@ -9,8 +9,8 @@ from twilio.rest import Client
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 from django_redis import get_redis_connection
-import json
-import redis
+from django.contrib.postgres.search import SearchVector
+import json,redis
 
 def token_generate(user_instance):
     return Token.objects.create(user=user_instance)
@@ -76,37 +76,58 @@ def cache_object_queue_add(key:str,value:any):
     redis_conn = redis.StrictRedis.from_url(settings.CACHES['default']['LOCATION'])
     redis_conn.rpush(key,value)
 
-def object_exists(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_exists(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.filter(**factor).exists()
-def object_get(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_get(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.get(**factor)
 
-def object_creator(factor,model):
+def object_creator(factor:dict,model:str):
     # this function is to create objects in user defined models
     return eval(model).objects.create(**factor)
-def object_filter(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_filter(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.filter(**factor)
 
-def object_filter_orderby(factor,model,orderby):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+def object_filter_orderby(factor:dict,model:str,orderby):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.filter(**factor).order_by(orderby)
 
 def object_all(model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
     return eval(model).objects.all()
 
-def object_remove(factor,model):
-    # factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
-    # Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
-    return eval(model).objects.filter(**factor)
+def object_remove(factor:dict,model:str):
+    """
+    factor is a dictionary {"email":"abc@ghmail.com"} < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    """
+
+    return eval(model).objects.filter(**factor).delete()
+
+def full_text_search(factor:list,model:str,search_term:str):
+    """
+    factor is a list ["username","email"] these are fields to be searched < usage is here, arguments are supposed to be passed like this
+    Model is supposed to be passed as a string object like model="User" where User is the name of the model you are refering to
+    search_term is the string you want to search
+    """
+    return eval(model).objects.annotate(search=SearchVector(*factor)).filter(search=search_term)
 
 def send_mail_to_relatives(user):
     emails_relations=[x.relation.email for x in object_filter(factor={"roll_id":user.roll},model="relation_users")]

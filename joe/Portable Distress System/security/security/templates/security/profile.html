@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'security/bootstrap.min.css' %}">
+</head>
+<style>
+    body {
+      background-color: #212529;
+    }
+    .vertical-center {
+      margin:auto;
+      transform: translateY(80%);
+    }
+    .btn-primary {
+      background-color:#0075eb ;
+      border-color: #0075eb;
+    }
+    .btn-primary:hover {
+      background-color: #0d47a1;
+      border-color: #0d47a1;
+    }
+    .api_key_form {
+      background-color: transparent;
+      border-color: transparent;
+      color:#5a83c1; 
+    }
+     
+</style>
+  
+<body>
+  {% for messg in messages %}
+  {% if "success" in messg.tags %}
+    <p style="color:lightgreen;">{{messg}}</p>
+  {% else %}
+    <p style="color:red;">{{messg}}</p>
+  {% endif %}
+  {% endfor %}
+<table class="table table-dark table-hover">
+  <tr>
+  <th>First Name</th>
+  <th>Last Name</th>
+  <th>Username</th>
+  </tr>
+  <tr>
+    <td>{{object.first_name}}</td>
+    <td>{{object.last_name}}</td>
+    <td>{{object.username}}</td>
+  </tr>
+</table>
+<form action="" method="POST">
+  {% csrf_token %}
+{% if not same_user %}
+  {% if relative_exists %}
+  <button type="submit" class="btn btn-danger rounded-pill">Remove Relative</button>
+  {% else %}
+  <button type="submit" class="btn btn-primary rounded-pill">Add Relative</button>
+  {% endif %}
+{% endif %}
+</form>
+</body>
+</html>

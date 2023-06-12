@@ -85,26 +85,26 @@ WSGI_APPLICATION = 'security.wsgi.application'
 
 DATABASES = {
     'default':{
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME':config("MYSQL_DATABASE"),
-        'USER': config("MYSQL_USER"),
-        'PASSWORD': config("MYSQL_ROOT_PASSWORD"),
-        'HOST': config("MYSQL_HOST"),
-        'PORT': config("MYSQL_PORT"),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':config("POSTGRESQL_DATABASE",default="security"),
+        'USER': config("POSTGRESQL_USER",default="root"),
+        'PASSWORD': config("POSTGRESQL_ROOT_PASSWORD",default="123456789"),
+        'HOST': config("POSTGRESQL_HOST",default="0.0.0.0"),
+        'PORT': config("POSTGRESQL_PORT",default="5432"),
     }
 }
 
 # Cache settings
-CACHES_TTL=config("CACHES_TTL")
+CACHES_TTL=config("CACHES_TTL",default=900)
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/",
+        "LOCATION": f"redis://{config('REDIS_HOST',default='0.0.0.0')}:{config('REDIS_PORT',default='6379')}/",
     }
 }
 
 SESSION_ENGINE = "django.contrib.sessions.backends.cache" 
-REDIS_WORKER_QUEUE=config("REDIS_WORKER_QUEUE")
+REDIS_WORKER_QUEUE=config("REDIS_WORKER_QUEUE",default="nice")
 
 
 # Password validation
@@ -131,7 +131,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Kolkata'
+TIME_ZONE = config("TIME_ZONE",default='Asia/Kolkata') 
 
 USE_I18N = True
 

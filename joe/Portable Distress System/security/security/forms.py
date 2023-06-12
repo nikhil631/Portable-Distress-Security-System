@@ -12,3 +12,5 @@ class user_create(UserCreationForm):
 class user_sign(forms.Form):
     username=forms.CharField(widget=forms.TextInput(attrs={'style':'width:10%'}),max_length=400)
     password=forms.CharField(widget=forms.PasswordInput(attrs={'style':'width:10%'}),max_length=400)
+class search_form(forms.Form):
+    search=forms.CharField(max_length=True,required=False)
