@@ -22,12 +22,12 @@ def send_mail_to_relatives(context):
         message=strip_tags("notifier/email.html"),
         )
 
-def send_mobile_messages(context):
-    # Twillio Implementation below
-    if len(context['phone_relations'])!=0:
-        client=Client(settings.WHATSAPP_API_SID,settings.WHATSAPP_API_AUTH_TOKEN)
-        for x in context['phone_relations']:
-            client.messages.create(from_="whatsapp:+14155238886",to=f"whatsapp:+91{x}",body=f"{context['first_name']} {context['last_name']} is in distress, X coordinate is {context['coordinate_x']}, Y coordinate is {context['coordinate_y']}, Date for this action is {context['date']} and time is {context['time']}, Click this link for Location https://www.google.com/maps/search/?api=1&query={context['coordinate_x']},{context['coordinate_y']}")
+# def send_mobile_messages(context):
+#     # Twillio Implementation below
+#     if len(context['phone_relations'])!=0:
+#         client=Client(settings.WHATSAPP_API_SID,settings.WHATSAPP_API_AUTH_TOKEN)
+#         for x in context['phone_relations']:
+#             client.messages.create(from_="whatsapp:+14155238886",to=f"whatsapp:+91{x}",body=f"{context['first_name']} {context['last_name']} is in distress, X coordinate is {context['coordinate_x']}, Y coordinate is {context['coordinate_y']}, Date for this action is {context['date']} and time is {context['time']}, Click this link for Location https://www.google.com/maps/search/?api=1&query={context['coordinate_x']},{context['coordinate_y']}")
 
 def notifiers():
     redis_conn = redis.StrictRedis.from_url(settings.CACHES["default"]["LOCATION"])
@@ -38,7 +38,7 @@ def notifiers():
                 request=json.loads(request[1])
                 print("entries found")
                 send_mail_to_relatives(request)
-                send_mobile_messages(request)
+                # send_mobile_messages(request)
             except Exception as e:
                 print(e)
                 pass
