@@ -15,7 +15,7 @@ def send_mail_to_relatives(context):
     # roll.roll.id means going from table this table incoming_info(roll)->contact_info(roll)->auth_user(id)
     if len(context['emails_relations'])!=0:
         mail.send_mail(
-        subject=f"{context['first_name']} {context['last_name']} might be in danger",
+        subject=f"{context['first_name']} {context['last_name']} is in distress",
         from_email="nikhil.tomar.22cse@bmu.edu.in",
         recipient_list=context['emails_relations'],
         html_message=render_to_string("notifier/email.html",context),
